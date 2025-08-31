@@ -1,0 +1,37 @@
+LCD_CLEAR:         ; Command for clearing the LCD 
+ MOV A, #01H 
+ ACALL LCD_COMNWRT 
+ RET 
+ 
+CLEAR_BUFFER:       ; Label for clearing the buffer 
+ MOV R0, #PASSWORD_BUFFER 
+ RET 
+ 
+PWM_ON:        ; Label for setting PWM such that motors are working with ON efficiency of 75% 
+ SETB MOTOR1_ENABLE 
+ SETB MOTOR2_ENABLE 
+ MOV R3, #5 
+ON_DELAY_LOOP: 
+ MOV R4, #255 
+PWM_1: DJNZ R4, PWM_1 
+ DJNZ R3, ON_DELAY_LOOP 
+ RET 
+ 
+PWM_OFF:     ; Label for setting PWM such that motors are working with OFF efficiency of 25% 
+ CLR MOTOR1_ENABLE 
+ CLR MOTOR2_ENABLE 
+ MOV R3, #3 
+OFF_DELAY_LOOP: 
+ MOV R4, #255 
+PWM_2: DJNZ R4, PWM_2 
+ DJNZ R3, OFF_DELAY_LOOP 
+ RET 
+ 
+COMMAND2:        ; LCD commands  
+ MOV A, #0FH     ; Command to activate LCD and cursor and ON cursor blinking 
+ ACALL LCD_COMNWRT 
+ MOV A, #06H     ; Command to increment the cursor 
+ ACALL LCD_COMNWRT 
+ MOV A, #01H    ; Command to clear the LCD 
+ ACALL LCD_COMNWRT 
+ RET
