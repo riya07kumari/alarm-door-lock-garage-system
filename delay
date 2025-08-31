@@ -1,0 +1,59 @@
+LCD_COMNWRT:    ; Label for executing the command for LCD 
+ MOV P1, A  
+ CLR P2.0      ; RS 
+ SETB P2.1     ; EN 
+ ACALL DELAY_71MS 
+ CLR P2.1 
+ RET 
+ 
+LCD_DATAWRT:    ; Label for executing the display commands for LCD 
+ MOV P1, A  
+ SETB P2.0     ; RS 
+ SETB P2.1     ; EN 
+ ACALL DELAY_71MS 
+ CLR P2.1 
+ RET 
+  
+DELAY_71MS:     ; Delay subroutine for 71ms 
+ MOV R3, #255 
+ HERE1: MOV R4, #255 
+ HERE2: DJNZ R4, HERE2 
+    DJNZ R3, HERE1 
+    RET 
+ 
+DELAY_1S:      ; Delay subroutine for 1s 
+ MOV R3, #14 
+ HERE3: MOV R4, #255 
+ HERE4: MOV R5, #255 
+ HERE5: DJNZ R5, HERE5 
+    DJNZ R4, HERE4 
+    DJNZ R3, HERE3 
+    RET 
+ 
+DELAY_10S:       ; Delay subroutine for 10s 
+ MOV R6, #10 
+ HERE6:  
+  ACALL DELAY_1S 
+  DJNZ R6, HERE6 
+ RET 
+ 
+DELAY_20S:      ; Delay subroutine for 20s 
+ MOV R6, #20 
+ HERE7: 
+  ACALL DELAY_1S 
+  DJNZ R6, HERE7 
+ RET 
+ 
+DELAY_5S:     ; Delay subroutine for 5s 
+ MOV R6, #5 
+ HERE8:  
+  ACALL DELAY_1S 
+  DJNZ R6, HERE8 
+ RET 
+ 
+DELAY_2S:       ; Delay subroutine for 2s 
+ MOV R6, #2 
+ HERE9:  
+  ACALL DELAY_1S 
+  DJNZ R6, HERE9 
+ RET
