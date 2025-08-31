@@ -1,0 +1,36 @@
+D7: 
+ CLR A 
+ MOVC A, @A+DPTR 
+ ACALL LCD_DATAWRT 
+ INC DPTR  
+ DJNZ R0, D7 
+ MOV A, #0CH    ; Command to make LCD ON and cursor OFF 
+ ACALL LCD_COMNWRT 
+ ACALL DELAY_2S 
+ SJMP MOTOR_OPEN 
+ 
+MOTOR_OPEN:    ; Label to operate the motors and open the door 
+ SETB MOTOR1_BACKWARD 
+ SETB MOTOR2_BACKWARD 
+ CLR MOTOR1_FORWARD 
+ CLR MOTOR2_FORWARD 
+ MOV R2, #1 
+ LOOP1: 
+ MOV R0, #100 
+ OPEN_PWM_LOOP: 
+  ACALL PWM_ON 
+  ACALL PWM_OFF 
+  DJNZ R0, OPEN_PWM_LOOP 
+  ACALL DELAY_1S 
+  DJNZ R2, LOOP1 
+ CLR MOTOR1_ENABLE 
+ CLR MOTOR2_ENABLE 
+ ACALL LCD_CLEAR 
+ MOTION1:     ; Once door is opened, the IR sensors would be ON and wait until motion is  
+  JNB IR1, MOTION1    ; detected. Once both the sensors are triggered, the door 
+closes automatically 
+ MOTION2: 
+  JNB IR2, MOTION2 
+ PROCEED: 
+  ACALL DELAY_5S 
+ SJMP DOOR_CLOSE
