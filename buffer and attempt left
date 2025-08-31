@@ -1,0 +1,115 @@
+INCORRECT_PASSWORD:     ; Label to display ‘Incorrect Password’ message 
+ DEC @R1   ; Decrements the number of attempts by 1 for every incorrect password 
+ ACALL LCD_CLEAR 
+ ACALL COMMAND2 
+ MOV DPTR, #INCORRECT_MESSAGE 
+ MOV A, #83H    ; To position the cursor at first line, 3rd  position 
+ ACALL LCD_COMNWRT 
+ MOV R2, #9    ; R2 stores the length of the data byte so as to print one letter at a time 
+D4: 
+ CLR A 
+ MOVC A, @A+DPTR 
+ ACALL LCD_DATAWRT 
+ INC DPTR 
+ DJNZ R2, D4 
+ MOV A, #0C3H    ; To position the cursor at second line, 3rd  position 
+ ACALL LCD_COMNWRT 
+ MOV R2, #9   ; R2 stores the length of the data byte so as to print one letter at a time 
+D9: 
+ CLR A 
+ MOVC A, @A+DPTR 
+ ACALL LCD_DATAWRT 
+ INC DPTR 
+ DJNZ R2, D9 
+ MOV A, #0CH    ; Command to make LCD ON and cursor OFF 
+ ACALL LCD_COMNWRT 
+ ACALL DELAY_1S 
+ ACALL LCD_CLEAR 
+ CJNE @R1, #0, TRY_MESSAGE     ; If any attempt is left, the pointer jumps to 
+TRY_MESSAGE 
+ SJMP BUZZER_ALERT    ; Else, the pointer jumps to BUZZER_ALERT to trigger the buzzer 
+ 
+TRY_MESSAGE: 
+ ACALL COMMAND2 
+ MOV A, #83H    ; To position the cursor at first line, 3rd  position 
+ ACALL LCD_COMNWRT 
+ MOV DPTR, #TRY_AGAIN 
+ MOV R0, #10    ; R0 stores the length of the data byte so as to print one letter at a time 
+D5: 
+ CLR A 
+ MOVC A, @A+DPTR 
+ ACALL LCD_DATAWRT 
+ INC DPTR  
+ DJNZ R0, D5 
+ MOV A, #0CH    ; Command to make LCD ON and cursor OFF 
+ ACALL LCD_COMNWRT 
+ ACALL DELAY_1S 
+ ACALL LCD_CLEAR 
+ SJMP ATTEMPTS_LEFT 
+ 
+ATTEMPTS_LEFT:    ; Label to display the number of attempts left 
+ ACALL COMMAND2 
+ MOV A, #84H    ; To position the cursor at first line, 4th  position 
+ ACALL LCD_COMNWRT 
+ MOV R0, #8   ; R0 stores the length of the data byte so as to print one letter at a time 
+ MOV DPTR, #ATTEMPT_LEFT 
+D12: 
+ CLR A 
+ MOVC A, @A+DPTR 
+ ACALL LCD_DATAWRT 
+ INC DPTR 
+ DJNZ R0, D12 
+ MOV A, #0C5H    ; To position the cursor at second line, 5th position 
+ ACALL LCD_COMNWRT 
+ MOV R0, #5    ; R0 stores the length of the data byte so as to print one letter at a time 
+D13: 
+ CLR A 
+ MOVC A, @A+DPTR 
+ ACALL LCD_DATAWRT 
+ INC DPTR 
+ DJNZ R0, D13 
+ SJMP DISPLAY_NUMBER 
+  
+DISPLAY_NUMBER: 
+ MOV DPTR, #ATTEMPT_NUMBER 
+ MOV A, #0CAH    ; To position the cursor at second line, 10th  position 
+ ACALL LCD_COMNWRT 
+ CLR A 
+ MOV A, @R1 
+ MOVC A, @A+DPTR 
+ ACALL LCD_DATAWRT 
+ MOV A, #0CH    ; Command to make LCD ON and cursor OFF 
+ ACALL LCD_COMNWRT 
+ ACALL DELAY_1S 
+ ACALL LCD_CLEAR 
+ LCALL CLEAR_BUFFER 
+ LJMP ENTER_PASSWORD 
+ 
+BUZZER_ALERT:    ; Label to display ‘Attempts over’ message and trigger the buzzer alert 
+ ACALL LCD_CLEAR 
+ ACALL COMMAND2 
+ MOV DPTR, #ATTEMPT_OVER 
+ MOV A, #84H    ; To position the cursor at first line, 4th position 
+ ACALL LCD_COMNWRT 
+ MOV R2, #8     ; R2 stores the length of the data byte so as to print one letter at a time 
+D10: 
+ CLR A 
+ MOVC A, @A+DPTR 
+ ACALL LCD_DATAWRT 
+ INC DPTR 
+ DJNZ R2, D10 
+ MOV A, #0C5H    ; To position the cursor at second line, 5th  position 
+ ACALL LCD_COMNWRT 
+ MOV R2, #5    ; R2 stores the length of the data byte so as to print one letter at a time 
+D11: 
+ CLR A 
+ MOVC A, @A+DPTR 
+ ACALL LCD_DATAWRT 
+ INC DPTR 
+ DJNZ R2, D11 
+ MOV A, #0CH    ; Command to make LCD ON and cursor OFF 
+ ACALL LCD_COMNWRT 
+ CLR P3.7    ; To turn on the buzzer for a particular time 
+ ACALL DELAY_10S 
+ SETB P3.7 
+ LJMP CLOSE
