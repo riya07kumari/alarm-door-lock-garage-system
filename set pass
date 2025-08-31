@@ -1,0 +1,41 @@
+FIND:    ; Label to find the corresponding column of the row containing the key pressed 
+ RRC A     ; If RRC A results in a carry, increment the DPTR and repeat the process,  
+ JNC MATCH     ; Else, if no carry is generated, jump to MATCH to display the key pressed 
+ INC DPTR  
+ SJMP FIND  
+MATCH:      
+ CLR A 
+ MOVC A,@A+DPTR 
+ ACALL LCD_DATAWRT 
+ MOV @R0, A     ; To store the key value to password buffer 
+ INC R0    ; Increment R0 for storing the next key value in subsequent memory location 
+ DJNZ R2, K1    ; To enter the digits four times  
+ MOV A, #0CH      ; Command to make LCD ON and cursor OFF 
+ ACALL LCD_COMNWRT 
+ ACALL DELAY_1S  
+ ACALL LCD_CLEAR 
+ ACALL DELAY_1S 
+ SJMP PROCESS 
+ 
+PROCESS: ; Label to display ‘VERIFYING’ message 
+ ACALL COMMAND2 
+ MOV A, #82H    ; To position the cursor at first line, 2nd  position 
+ ACALL LCD_COMNWRT 
+ MOV DPTR, #PROCESSING 
+ MOV R2, #12    ; R2 stores the length of the data byte so as to print one letter at a time 
+D6: 
+ CLR A 
+ MOVC A, @A+DPTR 
+ ACALL LCD_DATAWRT 
+ INC DPTR  
+ DJNZ R2, D6 
+ MOV A, #0CH    ; Command to make LCD ON and cursor OFF 
+ ACALL LCD_COMNWRT 
+ ACALL DELAY_1S 
+ SJMP PASSWORD_LENGTH 
+ 
+PASSWORD_LENGTH:    ; Label to initialize password verification 
+ ACALL COMMAND2 
+ MOV R7, #4 
+ MOV R0, #PASSWORD_BUFFER 
+ MOV DPTR, #PASSWORD
