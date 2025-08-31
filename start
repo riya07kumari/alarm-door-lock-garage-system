@@ -1,0 +1,13 @@
+ORG 0000H 
+ 
+PASSWORD_BUFFER EQU 30H    ; Memory location to store password buffer 
+PASSWORD_ATTEMPT EQU 40H     ; Memory location to store the number of attempts 
+MOTOR1_FORWARD      EQU     P2.4   ; Motor direction - forward (open)-IN2 
+MOTOR1_BACKWARD     EQU     P2.3    ; Motor direction - backward (close)-IN1 
+MOTOR1_ENABLE       EQU     P2.2    ; Motor enable-ENA 
+MOTOR2_FORWARD      EQU     P2.5    ; Motor direction - forward (open)-IN4 
+MOTOR2_BACKWARD     EQU     P2.6    ; Motor direction - backward (close)-IN3 
+MOTOR2_ENABLE       EQU     P2.7    ; Motor enable-ENB 
+IR1 EQU P3.5     ; IR SENSOR 1 
+IR2 EQU P3.6     ; IR SENSOR 2 
+SETB P3.7
