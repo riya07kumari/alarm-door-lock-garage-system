@@ -1,0 +1,16 @@
+ENTER_PASSWORD: ; Label to display ‘ENTER PASSWORD’ message 
+ ACALL COMMAND2 
+ MOV A, #80H     ; To position the cursor at first line, 0th position 
+ ACALL LCD_COMNWRT 
+ MOV DPTR, #LCD_ENTER_PASSWORD 
+ MOV R2, #15   ; R2 stores the length of the data byte so as to print one letter at a time 
+D2: 
+ CLR A 
+ MOVC A, @A+DPTR 
+ ACALL LCD_DATAWRT 
+ INC DPTR 
+ DJNZ R2, D2 
+ ACALL DELAY_71MS  
+ MOV A, #0C6H     ; To position the cursor at second line, 6th position 
+ ACALL LCD_COMNWRT 
+ SJMP LENGTH 
