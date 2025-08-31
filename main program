@@ -1,0 +1,20 @@
+ORG 0300H        ; Data bytes are stored starting from 300H memory locations 
+PROCESSING: DB 'V','E','R','I','F','Y','I','N','G','.','.','.' 
+OPEN_DOOR: DB 'D','O','O','R',' ','O','P','E','N','S' 
+CLOSE_DOOR: DB 'D','O','O','R',' ','C','L','O','S','E','S' 
+ATTEMPT_OVER: DB 'A','T','T','E','M','P','T','S','O','V','E','R','!' 
+ATTEMPT_LEFT: DB 'A','T','T','E','M','P','T','S','L','E','F','T',':' 
+ATTEMPT_NUMBER: DB '0','1','2' 
+PASSWORD: DB '1','2','3','4' 
+INCORRECT_MESSAGE: DB 'I','N','C','O','R','R','E','C','T','P','A','S','S','W','O','R','D','!' 
+CORRECT_MESSAGE: DB 'C','O','R','R','E','C','T','P','A','S','S','W','O','R','D','!' 
+TRY_AGAIN: DB 'T','R','Y',' ','A','G','A','I','N','!' 
+LCD_COMMAND: DB 38H, 0FH, 06H, 01H, 84H 
+LCD_WELCOME: DB 'W','E','L','C','O','M','E','!' 
+LCD_ENTER_PASSWORD: DB 'E','N','T','E','R',' ','P','A','S','S','W','O','R','D',':' 
+KCODE3: DB '*','0','#','D'  
+KCODE2: DB '7','8','9','C' 
+KCODE1: DB '4','5','6','B'  
+KCODE0: DB '1','2','3','A'  
+END 
+BLOCK DIAGRAM
