@@ -1,0 +1,38 @@
+VERIFY_PASSWORD:    ; Label to verify the password 
+ MOV B, @R0    ; To load the value at R0 to B 
+ CLR A 
+ MOVC A, @A+DPTR   ; Accumulator stores the actual password stored in DPTR 
+ CJNE A, B, INCORRECT_PASSWORD    ; If value stored in A and B are not equal, jump to 
+INCORRECT_PASSWORD 
+ INC R0    ; Else, increment R0 and DPTR for verifying next value 
+ INC DPTR 
+ DJNZ R7, VERIFY_PASSWORD    
+ SJMP CORRECT_PASSWORD 
+ 
+CORRECT_PASSWORD:    ; Label to display ‘Correct Password’ message 
+ ACALL LCD_CLEAR 
+ ACALL COMMAND2 
+ MOV DPTR, #CORRECT_MESSAGE 
+ MOV A, #84H    ; To position the cursor at first line, 4th  position 
+ ACALL LCD_COMNWRT 
+ MOV R2, #7     ; R2 stores the length of the data byte so as to print one letter at a time 
+D3: 
+ CLR A 
+ MOVC A, @A+DPTR 
+ ACALL LCD_DATAWRT 
+ INC DPTR  
+ DJNZ R2, D3 
+ MOV A, #0C3H    ; To position the cursor at second line, 3rd  position 
+ ACALL LCD_COMNWRT 
+ MOV R2, #9    ; R2 stores the length of the data byte so as to print one letter at a time 
+D8: 
+ CLR A 
+ MOVC A, @A+DPTR 
+ ACALL LCD_DATAWRT 
+ INC DPTR 
+ DJNZ R2, D8 
+ MOV A, #0CH    ; Command to make LCD ON and cursor OFF 
+ ACALL LCD_COMNWRT 
+ ACALL DELAY_1S 
+ ACALL LCD_CLEAR 
+ LJMP DOOR_OPEN
