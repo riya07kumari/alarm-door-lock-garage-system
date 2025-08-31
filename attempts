@@ -1,0 +1,17 @@
+START: 
+ MOV R0, #PASSWORD_BUFFER   ; To store the password buffer in R0 register 
+ MOV R1, #PASSWORD_ATTEMPT   ; To store the number of password attempts in R1  
+ MOV @R1, #3   ; Here, R1 stores the value 3 
+SJMP COMMAND 
+ 
+COMMAND:      ; Label for executing LCD commands one by one 
+ MOV DPTR, #LCD_COMMAND 
+ MOV R2, #5 
+C1: 
+ CLR A 
+ MOVC A, @A+DPTR 
+ ACALL LCD_COMNWRT 
+ INC DPTR 
+ DJNZ R2, C1 
+ ACALL DELAY_1S 
+ SJMP WELCOME
