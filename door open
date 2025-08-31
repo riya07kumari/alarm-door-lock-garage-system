@@ -1,0 +1,6 @@
+DOOR_OPEN:    ; Label to display ‘Door opens’ message 
+ ACALL COMMAND2 
+ MOV A, #83H    ; To position the cursor at first line, 3rd  position 
+ ACALL LCD_COMNWRT 
+ MOV DPTR, #OPEN_DOOR 
+ MOV R0, #10     ; R0 stores the length of the data byte so as to print one letter at a time 
