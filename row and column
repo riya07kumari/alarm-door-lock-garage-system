@@ -1,0 +1,58 @@
+LENGTH: MOV R2, #4    ; R2 stores the value 4 which is the password length 
+KEYPAD_START: MOV P0, #0FFH  
+ 
+K1:     ; Checking whether all keys are released 
+ MOV P3, #0  ;ROWS - PORT3 
+ MOV A, P0  ;COLUMNS - PORT0 
+ ANL A, #00001111B 
+ CJNE A, #00001111B,K1 
+ 
+K2:      ;Checking whether any key is pressed 
+ ACALL DELAY_71MS 
+ MOV A,P0  
+ ANL A,#00001111B  
+ CJNE A,#00001111B,OVER  
+ SJMP K2  
+ 
+OVER:     ;Checking whether the key is pressed and moves to check the row  
+ ACALL DELAY_71MS 
+ MOV A,P0  
+ ANL A,#00001111B  
+ CJNE A,#00001111B,OVER1 
+ SJMP K2  
+ 
+OVER1:  
+ MOV P3,#11111110B  
+ MOV A,P0  
+ ANL A,#00001111B  
+ CJNE A,#00001111B,ROW_0     ; If A holds the value 00001110, then the pointers moves 
+to ROW_0 
+ MOV P3,#11111101B  
+ MOV A,P0  
+ ANL A,#00001111B  
+ CJNE A,#00001111B,ROW_1     ; If A holds the value 00001101, then the pointers moves 
+to ROW_1 
+ MOV P3,#11111011B  
+ MOV A,P0  
+ ANL A,#00001111B  
+ CJNE A,#00001111B,ROW_2    ; If A holds the value 00001011, then the pointers moves 
+to ROW_2 
+ MOV P3,#11110111B 
+ MOV A,P0 
+ ANL A,#00001111B 
+ CJNE A,#00001111B,ROW_3    ; If A holds the value 00000111, then the pointers moves 
+to ROW_0 
+ LJMP K2    ; If none of the keys are pressed, jump to K2 
+ 
+ROW_0:  
+ MOV DPTR, #KCODE0  
+ SJMP FIND     
+ROW_1:  
+ MOV DPTR, #KCODE1  
+ SJMP FIND  
+ROW_2:  
+ MOV DPTR, #KCODE2  
+ SJMP FIND  
+ROW_3:  
+ MOV DPTR, #KCODE3  
+ SJMP FIND
