@@ -1,0 +1,16 @@
+WELCOME:     ; Label to display ‘WELCOME’ message on LCD display 
+ MOV A, #84H   ; To position the cursor at 4th position, first line 
+ ACALL LCD_COMNWRT 
+ MOV DPTR, #LCD_WELCOME 
+ MOV R2, #8    ; R2 stores the length of the data byte so as to print one letter at a time 
+D1:  
+ CLR A 
+ MOVC A, @A+DPTR 
+ ACALL LCD_DATAWRT 
+ INC DPTR 
+ DJNZ R2, D1 
+ MOV A, #0CH    ; Command to make LCD ON and cursor OFF 
+ ACALL LCD_COMNWRT 
+ ACALL DELAY_1S 
+ ACALL LCD_CLEAR 
+ SJMP ENTER_PASSWORD
