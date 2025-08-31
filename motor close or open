@@ -1,0 +1,27 @@
+MOTOR_CLOSE:    ; Label to operate the motors and close the door 
+ CLR MOTOR1_BACKWARD 
+ CLR MOTOR2_BACKWARD 
+ SETB MOTOR1_FORWARD 
+ SETB MOTOR2_FORWARD 
+ MOV R2, #10 
+ LOOP2: 
+ MOV R0, #10 
+ CLOSE_PWM_LOOP: 
+  ACALL PWM_ON 
+  ACALL PWM_OFF 
+  DJNZ R0, CLOSE_PWM_LOOP 
+  ACALL DELAY_1S 
+  DJNZ R2, LOOP2 
+ CLR MOTOR1_ENABLE 
+ CLR MOTOR2_ENABLE 
+ ACALL LCD_CLEAR 
+ MOV A, #08H      ; Command to make LCD off 
+ ACALL LCD_COMNWRT 
+ ACALL DELAY_5S 
+ LJMP START 
+ 
+CLOSE:     ; Label for closing the lock after door is closed 
+ MOV A, #08H        ; Command to make LCD off 
+ ACALL LCD_COMNWRT 
+ ACALL DELAY_20S 
+ LJMP START    ; To repeat the whole process again
